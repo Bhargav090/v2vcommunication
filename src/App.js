@@ -19,6 +19,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
+// Define the construction zone position and detection radius
+const constructionZone = {
+  position: [500, 700], // [x, y]
+  radius: 50,          // Radius for proximity check
+};
+
 const App = () => {
   const [vehicles, setVehicles] = useState({}); // Store vehicles as a dictionary for quick updates
 
@@ -38,8 +44,17 @@ const App = () => {
     });
   }, []);
 
+  // Function to check if a vehicle is near the construction zone
+  const isNearConstruction = (vehicle) => {
+    const dx = vehicle.position[0] - constructionZone.position[0];
+    const dy = vehicle.position[1] - constructionZone.position[1];
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    return distance <= constructionZone.radius;
+  };
+
   // Vehicle card component
   const VehicleCard = ({ vehicle }) => {
+    const nearConstruction = isNearConstruction(vehicle); // Check proximity
     return (
       <div className="vehicle-card">
         <FaCarAlt className="car-icon" />
@@ -50,12 +65,25 @@ const App = () => {
         <p>
           <strong>Position:</strong> ({vehicle.position[0]}, {vehicle.position[1]})
         </p>
+        <p>
+          <strong>Status:</strong>{" "}
+          {nearConstruction ? (
+            <span style={{ color: "red" }}>Near Construction Zone</span>
+          ) : (
+            <span style={{ color: "green" }}>Clear</span>
+          )}
+        </p>
       </div>
     );
   };
 
-  const road1Vehicles = Object.values(vehicles).filter((vehicle) => vehicle.position[1] <= 500);
-  const road2Vehicles = Object.values(vehicles).filter((vehicle) => vehicle.position[1] > 500);
+  // Divide vehicles into RSU regions (example logic, adjust if needed)
+  const road1Vehicles = Object.values(vehicles).filter(
+    (vehicle) => vehicle.position[1] <= 500
+  );
+  const road2Vehicles = Object.values(vehicles).filter(
+    (vehicle) => vehicle.position[1] > 500
+  );
 
   return (
     <div className="app">
