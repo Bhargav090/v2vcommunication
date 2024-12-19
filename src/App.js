@@ -89,7 +89,7 @@ const App = () => {
     <div className="app">
       <div className="road-container">
         <div className="road">
-          <h2>RSU-1</h2>
+          <h2>Road-1</h2>
           <div className="vehicles">
             {road1Vehicles.map((vehicle) => (
               <VehicleCard key={vehicle.vehicleID} vehicle={vehicle} />
@@ -97,7 +97,7 @@ const App = () => {
           </div>
         </div>
         <div className="road">
-          <h2>RSU-2</h2>
+          <h2>Road-2</h2>
           <div className="vehicles">
             {road2Vehicles.map((vehicle) => (
               <VehicleCard key={vehicle.vehicleID} vehicle={vehicle} />
